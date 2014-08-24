@@ -74,6 +74,7 @@ enemies = [[], [], [], []]
 
 toEnemy = 2
 
+ogre = false
 
 clamp = (v, min, max) ->
     if v < min then min else if v > max then max else v
@@ -150,13 +151,13 @@ update = ->
 
             if collides(players[i], e, 10, 6)
                 console.log 'VOOOB'
+                ogre = true
 
     toEnemy -= delta
     if toEnemy <= 0
         toEnemy = 4
 
         r = Math.floor(Math.random() * 4)
-        r = 3
 
         console.log r
 
@@ -165,14 +166,16 @@ update = ->
 
     draw(delta)
 
-    window.requestAnimationFrame(update)
+    if not ogre
+
+        window.requestAnimationFrame(update)
 
 
 draw = (delta) ->
     ctx.clearRect(0, 0, c.width, c.height)
 
     for player in players
-        ctx.fillStyle = player.color
+        ctx.fillStyle = if ogre then 'rgba(0, 0, 0, 0.5)' else player.color
         ctx.fillRect(player.x, player. y, 10, 10)
 
     for enemy, i in enemies
@@ -180,13 +183,20 @@ draw = (delta) ->
             ctx.fillStyle = if enemyInside(e, i) then '#444444' else 'rgba(0, 0, 0, 0.1)'
             ctx.fillRect(e.x, e.y, 6, 6)
 
-    ctx.fillStyle = '#000000'
+    ctx.fillStyle = if ogre then 'rgba(0, 0, 0, 0.5)' else'#000000'
     ctx.fillRect(395, 0, 10, 600)
     ctx.fillRect(0, 295, 800, 10)
 
     ctx.font = '24px Visitor'
     ctx.fillStyle = '#000000'
     ctx.fillText(elapsed.toFixed(2), 20, 20)
+
+    if ogre
+        ctx.font = '160px Visitor'
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#000000'
+        ctx.fillText('( ͡° ͜ʖ ͡°)', 400, 300)
 
 
 do ->
