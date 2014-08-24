@@ -43,7 +43,7 @@ players = [{
     y: 150
     speed: 350
     minX: 405
-    maxX: 800
+    maxX: 790
     minY: 0
     maxY: 285
     color: '#dddd00'
@@ -55,7 +55,7 @@ players = [{
     minX: 0
     maxX: 385
     minY: 305
-    maxY: 600
+    maxY: 590
     color: '#00ff00'
     }
     {
@@ -63,9 +63,9 @@ players = [{
     y: 450
     speed: 50
     minX: 405
-    maxX: 800
+    maxX: 790
     minY: 305
-    maxY: 600
+    maxY: 590
     color: '#ff00ff'
     }
 ]
@@ -73,6 +73,7 @@ players = [{
 enemies = [[], [], [], []]
 
 toEnemy = 2
+toToEnemy = 3
 
 ogre = false
 
@@ -83,7 +84,7 @@ collides = (a, b, as, bs) ->
     a.x + as > b.x and a.x < b.x + bs and a.y + as > b.y and a.y < b.y + bs
 
 enemyInside = (e, i) ->
-    e.x >= players[i].minX and e.x <= players[i].maxX and e.y >= players[i].minY and e.y <= players[i].maxY
+    e.x >= players[i].minX + 6 and e.x <= players[i].maxX + 6 and e.y >= players[i].minY + 6 and e.y <= players[i].maxY + 6
 
 spawn = [
     ->
@@ -116,7 +117,7 @@ spawn = [
         speed: speedMod / 2
 ]
 
-speedMod = 30
+speedMod = 60
 elapsed = 0
 
 update = ->
@@ -142,7 +143,7 @@ update = ->
         player.x = clamp(newPlayers[i].x, player.minX, player.maxX)
         player.y = clamp(newPlayers[i].y, player.minY, player.maxY)
 
-    speedMod += delta / 2
+    speedMod += delta / 5
 
     for enemy, i in enemies
         for e in enemy
@@ -155,14 +156,23 @@ update = ->
 
     toEnemy -= delta
     if toEnemy <= 0
-        toEnemy = 4
+        toToEnemy -= 0.09
+        toEnemy = toToEnemy
 
         r = Math.floor(Math.random() * 4)
-
-        console.log r
-
         enemies[r].push spawn[r]()
 
+        if elapsed >= 10
+            r = if r == 3 then 0 else r + 1
+            enemies[r].push spawn[r]()
+
+        if elapsed >= 30
+            r = if r == 3 then 0 else r + 1
+            enemies[r].push spawn[r]()
+
+        if elapsed >= 50
+            r = if r == 3 then 0 else r + 1
+            enemies[r].push spawn[r]()
 
     draw(delta)
 
