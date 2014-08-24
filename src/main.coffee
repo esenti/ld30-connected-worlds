@@ -84,7 +84,7 @@ collides = (a, b, as, bs) ->
     a.x + as > b.x and a.x < b.x + bs and a.y + as > b.y and a.y < b.y + bs
 
 enemyInside = (e, i) ->
-    e.x >= players[i].minX + 6 and e.x <= players[i].maxX + 6 and e.y >= players[i].minY + 6 and e.y <= players[i].maxY + 6
+    e.x >= players[i].minX and e.x <= players[i].maxX and e.y >= players[i].minY and e.y <= players[i].maxY
 
 spawn = [
     ->
